@@ -16,11 +16,13 @@ namespace MvcMusicStore.Controllers
         }
 
         // Get /Store/Browse?genre=Disco
-        public String Browse(String genre)
+        public ActionResult Browse(String genre)
         {
             // HttpUtility.HtmlEncode prevent for spript injection in url
-            String message = HttpUtility.HtmlEncode(";Store.Browse, Genre = "+ genre);
-            return message;
+            //String message = HttpUtility.HtmlEncode(";Store.Browse, Genre = "+ genre);
+
+            var genreModel = new Genre { Name = genre };
+            return View(genreModel);
         }
 
         // Get /Store/Details/id

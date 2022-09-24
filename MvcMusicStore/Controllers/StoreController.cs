@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MvcMusicStore.Models;
 
 namespace MvcMusicStore.Controllers
 {
@@ -23,10 +24,11 @@ namespace MvcMusicStore.Controllers
         }
 
         // Get /Store/Details/id
-        public String Details(int id)
+        public ActionResult Details(int id)
         {
-            String message = "Store.Details, ID =" + id;
-            return message;
+            //String message = "Store.Details, ID =" + id;
+            var album = new Album { Title = "Album" + id };
+            return View(album);
         }
     }
 }

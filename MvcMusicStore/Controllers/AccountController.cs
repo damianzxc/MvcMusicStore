@@ -40,8 +40,12 @@ namespace MvcMusicStore.Controllers
             {
                 if (MembershipService.ValidateUser(model.UserName, model.Password))
                 {
-                    FormsService.SignIn(model.UserName, model.RememberMe);
-                    if (Url.IsLocalUrl(returnUrl))
+                    MigrateShoppingCart(model.UserName);
+
+                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1
+                        && returnUrl.StartsWith("/")
+                        && !returnUrl.StartsWith("//")
+                        && !returnUrl.StartsWith("/\\"))
                     {
                         return Redirect(returnUrl);
                     }
@@ -87,11 +91,15 @@ namespace MvcMusicStore.Controllers
             if (ModelState.IsValid)
             {
                 // Attempt to register the user
-                MembershipCreateStatus createStatus = MembershipService.CreateUser(model.UserName, model.Password, model.Email);
-
+                MembershipCreateStatus createStatus;
+                Membership.CreateUser(model.UserName, model.Password, model.Email,
+                       "question", "answer", true, null, out createStatus);
+                
                 if (createStatus == MembershipCreateStatus.Success)
                 {
-                    FormsService.SignIn(model.UserName, false /* createPersistentCookie */);
+                    MigrateShoppingCart(model.UserName);
+
+                    FormsAuthentication.SetAuthCookie(model.UserName, false /*createPersistentCookie */);
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -101,7 +109,6 @@ namespace MvcMusicStore.Controllers
             }
 
             // If we got this far, something failed, redisplay form
-            ViewBag.PasswordLength = MembershipService.MinPasswordLength;
             return View(model);
         }
 
@@ -146,5 +153,13 @@ namespace MvcMusicStore.Controllers
             return View();
         }
 
+        private void MigrateShoppingCart(string UserName)
+        {
+            // Associate shopping cart items with logged-in user
+            var cart = ShoppingCart.GetCart(this.HttpContext);
+
+            cart.MigrateCart(UserName);
+            Session[ShoppingCart.CartSessionKey] = UserName;
+        }
     }
 }

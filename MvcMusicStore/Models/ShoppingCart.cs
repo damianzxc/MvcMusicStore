@@ -9,9 +9,9 @@ namespace MvcMusicStore.Models
     public partial class ShoppingCart
     {
         private MusicStoreEntities storeDb = new MusicStoreEntities();
-        private const String CartSessionKey = "CartId";
+        public const String CartSessionKey = "CartId";
    
-        private String ShoppingCartId { get; set;}
+        public String ShoppingCartId { get; set;}
 
         public static ShoppingCart GetCart(HttpContextBase context)
         {

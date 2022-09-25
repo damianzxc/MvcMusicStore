@@ -9,15 +9,12 @@ namespace MvcMusicStore.Controllers
 {
     public class StoreController : Controller
     {
-        // Get /Store/
+
+        MusicStoreEntities storeDb = new MusicStoreEntities();
+
         public ActionResult Index()
         {
-            var genres = new List<Genre>
-            {
-                new Genre { Name = "Disco"},
-                new Genre { Name = "Jazz"},
-                new Genre { Name = "Rock"}
-            };
+            var genres = storeDb.Genres.ToList();
             return View(genres);
         }
 

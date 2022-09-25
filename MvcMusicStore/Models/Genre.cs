@@ -5,7 +5,7 @@ using System.Web;
 
 namespace MvcMusicStore.Models
 {
-    public class Genre
+    public partial class Genre
     {
         public int GenreId { get; set; }
         public String Name { get; set; }

@@ -24,15 +24,14 @@ namespace MvcMusicStore.Controllers
             // HttpUtility.HtmlEncode prevent for spript injection in url
             //String message = HttpUtility.HtmlEncode(";Store.Browse, Genre = "+ genre);
 
-            var genreModel = new Genre { Name = genre };
+            var genreModel = storeDb.Genres.Include("Albums").Single(g => g.Name == genre);
             return View(genreModel);
         }
 
         // Get /Store/Details/id
         public ActionResult Details(int id)
         {
-            //String message = "Store.Details, ID =" + id;
-            var album = new Album { Title = "Album" + id };
+            var album = storeDb.Albums.Find(id);
             return View(album);
         }
     }
